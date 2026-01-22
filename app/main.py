@@ -30,10 +30,9 @@ async def upload_file(file: UploadFile | None = None):
     df['risk_level'] = pd.cut(x=df['range_km'], bins=[-np.inf, 20, 100, 300, np.inf], labels=['low', 'medium',
                                                                                               'high', 'extreme'])
     df.fillna('Unknown', inplace=True)
-    print(df)
-    print(df.dtypes)
-    return {"filename": file.filename}
+    result = conn.insert_weapon(df)
 
+    return result
 
 if __name__ == "__main__":
     uvicorn.run(app='main:app', host='0.0.0.0', port=8000, reload=True)
