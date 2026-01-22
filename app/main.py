@@ -18,6 +18,7 @@ conn = DbConnection(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DA
 @app.on_event("startup")
 def startup_event():
     conn.get_connection()
+    conn.create_table()
 
 
 @app.post("/upload")
@@ -30,7 +31,8 @@ async def upload_file(file: UploadFile | None = None):
     df['risk_level'] = pd.cut(x=df['range_km'], bins=[-np.inf, 20, 100, 300, np.inf], labels=['low', 'medium',
                                                                                               'high', 'extreme'])
     df.fillna('Unknown', inplace=True)
-    result = conn.insert_weapon(df)
+    rows = [tuple(row.to_list()) for index, row in df.iterrows()]
+    result = conn.insert_weapon(rows)
 
     return result
 

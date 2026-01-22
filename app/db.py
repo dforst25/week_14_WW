@@ -53,12 +53,9 @@ class DbConnection:
                     range_km, weight_kg, manufacturer, origin_country, storage_location, year_estimated, risk_level)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ;"""
+        values = weapons
 
-        values = [tuple(weapon.values()) for weapon in weapons]
-
-        with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute('SELECT COUNT(*) FROM weapons;')
-            length_before = cursor.fetchone()[0]
+        with cnx.cursor() as cursor:
 
             cursor.execute(f"USE {self.database}")
 
@@ -68,12 +65,10 @@ class DbConnection:
                 cursor.execute(insert_statement, values[0])
             else:
                 raise ValueError("No weapons to insert")
-
-            cursor.execute('SELECT COUNT(*) FROM weapons;')
-            length_after = cursor.fetchone()
-
-        cnx.commit()
+            cnx.commit()
         return {
             "status": "success",
-            "inserted_records": int(length_after)-int(length_before)
+            "inserted_records": len(values)
         }
+
+
