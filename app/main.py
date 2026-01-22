@@ -2,8 +2,22 @@ from fastapi import FastAPI, UploadFile, HTTPException
 import pandas as pd
 import numpy as np
 import uvicorn
+import os
+from db import DbConnection
+
+MYSQL_HOST = os.getenv("MYSQL_HOST", 'localhost')
+MYSQL_PORT = int(os.getenv("MYSQL_PORT", '3306'))
+MYSQL_USER = os.getenv("MYSQL_USER", 'root')
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", '')
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", 'weapons_db')
 
 app = FastAPI()
+conn = DbConnection(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE)
+
+
+@app.on_event("startup")
+def startup_event():
+    conn.get_connection()
 
 
 @app.post("/upload")
