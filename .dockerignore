@@ -1,0 +1,15 @@
+.venv/
+
+.idea/
+
+data/
+
+.k8s/
+
+.screenshots/
+
+.gitignore
+
+commands.txt
+
+README.md
