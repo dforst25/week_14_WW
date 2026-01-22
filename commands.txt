@@ -1,3 +1,13 @@
+docker build -t 'dforst98/weapon-warehouse-system' .
 
 docker login
 
+docker push dforst98/weapon-warehouse-system
+
+oc apply -f k8s
+
+oc get pods -w
+
+oc expose svc api-service
+
+oc get route
